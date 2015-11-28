@@ -17,7 +17,9 @@
   4.Print " }, "
 3. End
 */
-void addOneBit(int *)
+void addOneBit(int *, int);
+void printSubset(int *, int);
+int highestBin(int *, int);
 
 void main(){
   /*
@@ -30,9 +32,9 @@ void main(){
   }
   int input;
   printf("Problem 4: Prints the powerset of the set containing integers 1 - n");
-  printf("\n 1 < n < 1000")
+  printf("\n 1 < n < 1000: ");
   scanf("%d", &input);
-  while (highestBin(binrep, input) == 0);
+  while (highestBin(binrep, input) == 0){
     printSubset(binrep, input);
     printf(", ");
     addOneBit(binrep, input);
@@ -45,9 +47,9 @@ void addOneBit(int *binrep, int limit){
   limit += 1; //this allows the function to add up to 2^n
   for (i = 0; i < limit; i ++){
     if (*(binrep + sizeof(int) * i) == 1){
-      *(binrep + sizeof(int) * i) = "0";
+      *(binrep + sizeof(int) * i) = 0;
     } else {
-      *(binrep + sizeof(int) * i) = "1";
+      *(binrep + sizeof(int) * i) = 1;
       break;
     }
   }
@@ -55,18 +57,18 @@ void addOneBit(int *binrep, int limit){
 
 void printSubset(int *binrep, int limit){
   int i;
-  printf("{")
+  printf("{");
   for (i = 0; i < limit; i++){ //prints all elements in the specific subset
     if (*(binrep + sizeof(int) * i) == 1){
       printf("%d, ", i + 1); // i + 1 represents a number from 1 to 1000
     }
   }
   printf("}");
+  fag++;
 }
 
 //Returns 1 if the binary digit is 2^n, 0 otherwise
 int highestBin(int *binrep, int n){
-  n += 1;
   if (*(binrep + sizeof(int) * n) == 1) return 1;
   return 0;
 }
