@@ -8,14 +8,13 @@
 
  Flow:
  1. Get input n
- 2. Loop while i < n (this loop prints one element of the powerset per iteration)
-  1. Get the binary equivalent of i and pass it onto a string "binary".
-  2. Print "{ "
-  3. Loop while j < 1000 (this prints one element in a subset)
-   1. If binary[j]=='1', print ("%d, ", j)
-   2. j++
-  4.Print " }, "
-3. End
+ 2. Loop while the binary representation is less than 2^n + 1
+  1. Print subset - Loop through binrep
+   1. Print index + 1 if binrep[index] == 1
+  2. Add one bit - loop through binrep
+   1. If binrep[i] = 0, then make it 1 and end loop, else if it's
+      1, continue and make it 0.
+ 3. end
 */
 void addOneBit(int *, int);
 void printSubset(int *, int);
@@ -64,7 +63,6 @@ void printSubset(int *binrep, int limit){
     }
   }
   printf("}");
-  fag++;
 }
 
 //Returns 1 if the binary digit is 2^n, 0 otherwise
