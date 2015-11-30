@@ -18,6 +18,7 @@ void main(){
   }
   int input;
   i = 0;
+  int numcircles = 0;
   do { //input phase
     printf("Circle %d:\n", i + 1);
     printf("X: ");
@@ -29,12 +30,13 @@ void main(){
     printf("Enter one more circle? Type 0 for no.");
     scanf("%d", &input);
     i++;
+    numcircles++;
   } while (input != 0 && i < 50);
   int j;
   int highest = 0;
   int highestc;
-  for (i = 0; i < 49; i++){ //compare all pairs with each other
-    for (j = i + 1; j < 50; j++){
+  for (i = 0; i < numcircles-1; i++){ //compare all pairs with each other
+    for (j = i + 1; j < numcircles; j++){
       double dist = getDistance(circles + i, circles + j);
       if (dist <= circles[i].r + circles[j].r && dist >= abs(circles[i].r - circles[j].r)){
         circles[i].collisions++;
