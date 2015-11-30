@@ -38,6 +38,8 @@ void main(){
   for (i = 0; i < numcircles-1; i++){ //compare all pairs with each other
     for (j = i + 1; j < numcircles; j++){
       double dist = getDistance(circles + i, circles + j);
+      //a circle intersects with another if the distance between them is
+      //between the sum and difference of their radii
       if (dist <= circles[i].r + circles[j].r && dist >= abs(circles[i].r - circles[j].r)){
         circles[i].collisions++;
         circles[j].collisions++;
