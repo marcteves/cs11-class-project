@@ -1,5 +1,8 @@
 #include <stdio.h>
 
+//find the largest egyptian fraction that can subtract from the current value
+//of real
+//repeat until real ~= 0
 void main(){
   double real;
   printf("Problem 11: Egyptian fraction sum with least operands of real number \n");
