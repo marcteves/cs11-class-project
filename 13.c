@@ -7,7 +7,7 @@ int charToDigit(char);
 
 void main(){
   int digits[21];
-  int i;
+  int i = 0;
   while (i < 21){ //so we can add to the digit ARRAY right AWAY
     digits[i++] = 0;
   }
@@ -19,17 +19,19 @@ void main(){
   printf("Enter second digit: ");
   scanf("%s", input);
   parseDigits(digits, input);
+  printf("Result: ");
   printResult(digits);
 }
 
 //interprets the string and adds the value to the current value of the big int
 void parseDigits(int* digits, char *string){
-  char *end = string + strlen(string) -1;
+  char *end = string + strlen(string) - 1;
   int i;
-  for (i = 0; i < strlen(string) - 1; i++, end--){
+  for (i = 0; i < strlen(string); i++, end--){
     int *digit = digits + i;
     printf("%d", *digit);
     *digit += charToDigit(*end);
+    printf("%d", charToDigit(*end));
     if (*digit >= 10){ //carry one
       *digit -= 10;
       digit++;
@@ -48,6 +50,7 @@ int charToDigit(char intwannabe){
 void printResult(int *digits){
   int i = 21 - 1;
   while (i >= 0){
-    printf("%d", digits + i--);
+    if (*(digits + i) != 0) printf("%d", *(digits + i));
+    i--;
   }
 }
