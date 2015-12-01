@@ -8,6 +8,7 @@ typedef struct node {
   struct node *next;
 } point;
 
+void freeNodes(point*);
 point *createNode(point*, double, double);
 double getDistance(point*, point*);
 void printList(point*);
@@ -51,9 +52,14 @@ void main(){
   }
   printf("Pair with the least distance is (%f, %f) and (%f, %f), with a distance %f",
   sp1 -> x, sp1 -> y, sp2 -> x, sp2 -> y, least);
+  freeNodes(head);
+}
+
+void freeNodes(point *head){
   while (head -> next != NULL){ //free memory because i'm nice
     point *tofree = head;
     head = head -> next;
+    free(tofree);
   }
 }
 

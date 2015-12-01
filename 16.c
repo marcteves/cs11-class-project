@@ -11,6 +11,7 @@ typedef struct circle{
 double getDistance(circle*, circle*);
 
 void main(){
+  printf("Problem 16: Most intersected circle.")
   circle circles[50];
   int i = 0;
   while (i < 50){
