@@ -38,7 +38,7 @@ Finding a break:
 */
 
 #define MINTIME 480 //8am
-#define MAXTIME 1680 //8pm
+#define MAXTIME 1200 //8pm
 
 typedef struct node{
   int start;
@@ -54,6 +54,7 @@ timeblock* isBetweenList(timeblock *, int);
 timeblock* isBetweenBreak(timeblock *, int, int);
 timeblock* getBreaks(timeblock *, timeblock *);
 void appendToList(timeblock *, timeblock *);
+void printSched(timeblock *);
 
 void main(){
   char input[1000];
@@ -62,9 +63,8 @@ void main(){
   timeblock *heads = NULL; //list of schedules
   timeblock *headb = NULL; //list of breaks
   heads = parseInput(heads, input);
-  printList(heads);
   headb = getBreaks(headb, heads);
-  printList(headb);
+  printSched(headb);
 }
 
 timeblock* parseInput(timeblock *head, char *input){
@@ -101,7 +101,7 @@ timeblock* parseInput(timeblock *head, char *input){
         start = 0;
         hour = 1;
       } else if (*input == ','){
-        traverser -> end = adder;
+        traverser -> end += adder;
         traverser -> next = createNode(0,0);
         traverser = traverser -> next;
         //reset parser parameters
@@ -120,42 +120,29 @@ timeblock* parseInput(timeblock *head, char *input){
 }
 
 timeblock* getBreaks(timeblock *breaks, timeblock *schedule){
-  int i = 0;
   int breakstart = MINTIME;
   int breakend = MAXTIME;
   timeblock *head;
-  printf("\n");
   while (1){
     timeblock *intersect = isBetweenList(schedule, breakstart);
     while (intersect != NULL){
       breakstart = intersect -> end;
       intersect = isBetweenList(schedule, breakstart);
     }
-    printf("Breakstart: %d\t", breakstart);
     intersect = isBetweenBreak(schedule, breakstart, breakend);
     while (intersect!= NULL){
       breakend = intersect -> start;
       intersect = isBetweenBreak(schedule, breakstart, breakend);
     }
-    printf("Breakend: %d\t", breakend);
     //breakstart and breakend should be correctly defined before this
     if (breaks == NULL){
       breaks = createNode(breakstart, breakend);
-      printf("Headbreaks info:\n");
-      printf("Next: %p\n", breaks -> next);
       head = breaks;
       appendToList(schedule, breaks); //append the break found to schedule list
-      printf("\nBreaks info after append:\n");
-      printf("Next: %p \n", breaks -> next);
     } else {
       breaks -> next = createNode(breakstart, breakend);
       breaks = breaks -> next;
-      printf("Breaks info:\n");
-      printf("Next: %p \n", breaks -> next);
       appendToList(schedule, breaks); //append the break found to schedule list
-      printf("\nBreaks info after append:\n");
-      printf("Next: %p \n", breaks -> next);
-      i++;
     }
     //reposition start and end for the next optimization run
     breakstart = breaks -> end;
@@ -163,12 +150,7 @@ timeblock* getBreaks(timeblock *breaks, timeblock *schedule){
     if (breakstart == MAXTIME) {
       break;
     }
-    printf("End Breakstart: %d", breakstart);
-    // printf("\nNew sched list: ");
-    // printList(schedule);
-    printf("\n");
   }
-  printf("Elems: %d", i);
   return head;
 }
 
@@ -195,10 +177,9 @@ timeblock* isBetweenBreak(timeblock *schedule, int start, int end){
 
 void appendToList(timeblock *list, timeblock* item){
   while (list -> next != NULL){
-    printf("(%d - %d)", list -> start, list -> end);
     list = list -> next;
   }
-  printf("\nAppend to: (%d - %d)", list -> start, list -> end);
+  item = createNode(item -> start, item -> end);
   list -> next = item;
 }
 
@@ -225,5 +206,42 @@ void printList(timeblock *head){
     if (head -> next != NULL) printf(", ");
     head = head -> next;
     i++;
+  }
+}
+
+void printSched(timeblock *head){
+  while (head != NULL){
+    int start = head -> start;
+    int end = head -> end;
+    int pm = 0;
+    //print start
+    if (start > 720) {
+      pm = 1;
+      start -= 720;
+    }
+    printf("%d", start / 60); //hours
+    start %= 60;
+    if (start != 0) printf(":%d", start); //minutes
+    if (pm == 1) {
+      printf("p");
+    } else {
+      printf("a");
+    }
+    printf("-");
+    //print end
+    if (end > 720) {
+      pm = 1;
+      end -= 720;
+    }
+    printf("%d", end / 60); //hours
+    end %= 60;
+    if (end != 0) printf(":%d", end); //minutes
+    if (pm == 1) {
+      printf("p");
+    } else {
+      printf("a");
+    }
+    if (head -> next != NULL) printf(",");
+    head = head -> next;
   }
 }
