@@ -123,6 +123,7 @@ timeblock* parseInput(timeblock *head, char *input){
 }
 
 timeblock* getBreaks(timeblock *breaks, timeblock *schedule){
+  int i = 0;
   int breakstart = MINTIME;
   int breakend = MAXTIME;
   timeblock *head;
@@ -133,34 +134,39 @@ timeblock* getBreaks(timeblock *breaks, timeblock *schedule){
       breakstart = intersect -> end;
       intersect = isBetweenList(schedule, breakstart);
     }
+    printf("Breakstart: %d", breakstart);
     intersect = isBetweenBreak(schedule, breakstart, breakend);
+
     while (intersect!= NULL){
       printf("Lamo");
       breakend = intersect -> start;
       intersect = isBetweenBreak(schedule, breakstart, breakend);
     }
-    if (breakstart < MAXTIME){
-      if (breaks == NULL){
-        breaks = createNode(breakstart, breakend);
-        head = breaks;
-        appendToList(schedule, breaks); //append the break found to schedule list
-      } else {
-        breaks -> next = createNode(breakstart, breakend);
-        breaks = breaks -> next;
-        appendToList(schedule, breaks); //append the break found to schedule list
-      }
+    if (breaks == NULL){
+      breaks = createNode(breakstart, breakend);
+      head = breaks;
+      appendToList(schedule, breaks); //append the break found to schedule list
     } else {
+      breaks -> next = createNode(breakstart, breakend);
+      breaks = breaks -> next;
+      appendToList(schedule, breaks); //append the break found to schedule list
+      i++;
+    }
+    breakstart = breaks -> end;
+    breakend = MAXTIME;
+    if (breakstart == MAXTIME) {
       break;
     }
-    printf("Breakstart: %d", breakstart);
+    printf("AYYYY Breakstart: %d", breakstart);
   }
+  printf("Elems: %d", i);
   return head;
 }
 
 //returns the pointer of the schedule node if time is between the schedule node
 timeblock* isBetweenList(timeblock *schedule, int time){
   while (schedule != NULL){
-    if (schedule -> start <= time && schedule -> end >=  time){
+    if (schedule -> start <= time && schedule -> end >  time){
       return schedule;
     }
     schedule = schedule -> next;
@@ -170,7 +176,7 @@ timeblock* isBetweenList(timeblock *schedule, int time){
 
 timeblock* isBetweenBreak(timeblock *schedule, int start, int end){
   while (schedule != NULL){
-    if (schedule -> start <= end && schedule -> start >= start){
+    if (schedule -> start < end && schedule -> start > start){
       return schedule;
     }
     schedule = schedule -> next;
