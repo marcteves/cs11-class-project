@@ -89,16 +89,13 @@ timeblock* parseInput(timeblock *head, char *input){
         adder += 720;
       } else if (*input == ':'){
         if (start == 1){
-          printf("%d", adder);
           traverser -> start += adder;
         } else {
-          printf("%d", adder);
           traverser -> end += adder;
         }
         adder = 0; //set the adder to 0 because it has added already
         hour = 0;
       } else if (*input == '-'){
-        printf("%d", adder);
         traverser -> start += adder;
         adder = 0;
         start = 0;
@@ -127,37 +124,49 @@ timeblock* getBreaks(timeblock *breaks, timeblock *schedule){
   int breakstart = MINTIME;
   int breakend = MAXTIME;
   timeblock *head;
+  printf("\n");
   while (1){
     timeblock *intersect = isBetweenList(schedule, breakstart);
     while (intersect != NULL){
-      printf("Ay");
       breakstart = intersect -> end;
       intersect = isBetweenList(schedule, breakstart);
     }
-    printf("Breakstart: %d", breakstart);
+    printf("Breakstart: %d\t", breakstart);
     intersect = isBetweenBreak(schedule, breakstart, breakend);
-
     while (intersect!= NULL){
-      printf("Lamo");
       breakend = intersect -> start;
       intersect = isBetweenBreak(schedule, breakstart, breakend);
     }
+    printf("Breakend: %d\t", breakend);
+    //breakstart and breakend should be correctly defined before this
     if (breaks == NULL){
       breaks = createNode(breakstart, breakend);
+      printf("Headbreaks info:\n");
+      printf("Next: %p\n", breaks -> next);
       head = breaks;
       appendToList(schedule, breaks); //append the break found to schedule list
+      printf("\nBreaks info after append:\n");
+      printf("Next: %p \n", breaks -> next);
     } else {
       breaks -> next = createNode(breakstart, breakend);
       breaks = breaks -> next;
+      printf("Breaks info:\n");
+      printf("Next: %p \n", breaks -> next);
       appendToList(schedule, breaks); //append the break found to schedule list
+      printf("\nBreaks info after append:\n");
+      printf("Next: %p \n", breaks -> next);
       i++;
     }
+    //reposition start and end for the next optimization run
     breakstart = breaks -> end;
     breakend = MAXTIME;
     if (breakstart == MAXTIME) {
       break;
     }
-    printf("AYYYY Breakstart: %d", breakstart);
+    printf("End Breakstart: %d", breakstart);
+    // printf("\nNew sched list: ");
+    // printList(schedule);
+    printf("\n");
   }
   printf("Elems: %d", i);
   return head;
@@ -186,8 +195,10 @@ timeblock* isBetweenBreak(timeblock *schedule, int start, int end){
 
 void appendToList(timeblock *list, timeblock* item){
   while (list -> next != NULL){
+    printf("(%d - %d)", list -> start, list -> end);
     list = list -> next;
   }
+  printf("\nAppend to: (%d - %d)", list -> start, list -> end);
   list -> next = item;
 }
 
