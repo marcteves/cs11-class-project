@@ -47,9 +47,9 @@ typedef struct node{
 } timeblock;
 
 int charToDigit(char);
-timeblock* parseInput(timeblock *, char *);
-void printList(timeblock *);
-timeblock* createNode();
+timeblock* parseTimeblockInput(timeblock *, char *);
+void printTimeblockList(timeblock *);
+timeblock* createTimeblockNode();
 timeblock* isBetweenList(timeblock *, int);
 timeblock* isBetweenBreak(timeblock *, int, int);
 timeblock* getBreaks(timeblock *, timeblock *);
@@ -62,14 +62,14 @@ void main(){
   scanf("%s", input);
   timeblock *heads = NULL; //list of schedules
   timeblock *headb = NULL; //list of breaks
-  heads = parseInput(heads, input);
+  heads = parseTimeblockInput(heads, input);
   headb = getBreaks(headb, heads);
   printSched(headb);
 }
 
-timeblock* parseInput(timeblock *head, char *input){
+timeblock* parseTimeblockInput(timeblock *head, char *input){
   if (head == NULL){ //create list if empty
-    head = createNode(0,0);
+    head = createTimeblockNode(0,0);
   }
   char *end = input + strlen(input) - 1;
   timeblock *traverser = head;
@@ -102,7 +102,7 @@ timeblock* parseInput(timeblock *head, char *input){
         hour = 1;
       } else if (*input == ','){
         traverser -> end += adder;
-        traverser -> next = createNode(0,0);
+        traverser -> next = createTimeblockNode(0,0);
         traverser = traverser -> next;
         //reset parser parameters
         hour = 1;
@@ -136,11 +136,11 @@ timeblock* getBreaks(timeblock *breaks, timeblock *schedule){
     }
     //breakstart and breakend should be correctly defined before this
     if (breaks == NULL){
-      breaks = createNode(breakstart, breakend);
+      breaks = createTimeblockNode(breakstart, breakend);
       head = breaks;
       appendToList(schedule, breaks); //append the break found to schedule list
     } else {
-      breaks -> next = createNode(breakstart, breakend);
+      breaks -> next = createTimeblockNode(breakstart, breakend);
       breaks = breaks -> next;
       appendToList(schedule, breaks); //append the break found to schedule list
     }
@@ -154,7 +154,7 @@ timeblock* getBreaks(timeblock *breaks, timeblock *schedule){
   return head;
 }
 
-//returns the pointer of the schedule node if time is between the schedule node
+//returns the pointer of the schedule node if time is between a schedule node
 timeblock* isBetweenList(timeblock *schedule, int time){
   while (schedule != NULL){
     if (schedule -> start <= time && schedule -> end >  time){
@@ -179,11 +179,11 @@ void appendToList(timeblock *list, timeblock* item){
   while (list -> next != NULL){
     list = list -> next;
   }
-  item = createNode(item -> start, item -> end);
+  item = createTimeblockNode(item -> start, item -> end);
   list -> next = item;
 }
 
-timeblock* createNode(int start, int end){
+timeblock* createTimeblockNode(int start, int end){
   timeblock *new = malloc(sizeof(timeblock));
   new -> start = start;
   new -> end = end;
@@ -198,7 +198,7 @@ int charToDigit(char intwannabe){
   return -1;
 }
 
-void printList(timeblock *head){
+void printTimeblockList(timeblock *head){
   int i = 0;
   while (head != NULL){
     printf("Elem %d: ", i);
