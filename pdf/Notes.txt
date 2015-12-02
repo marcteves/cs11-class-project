@@ -1,0 +1,132 @@
+#4 Powerset
+
+Q: Why use a binary representation?
+A: There are 2^n elements in the powerset of a set containing n elements
+ Consider a set of 3 elements P{1,2,3} =
+ {}       000
+ {3}      001
+ {2}      010
+ {2,3}    011
+ {1}      100
+ {1,3}    101
+ {1,2}    110
+ {1,2,3}  111
+
+ There are 2^3 (8) elements, represented elegantly using binary.
+
+#5 Polynomial
+
+Q:  How is the polynomial stored in order?
+A:  Lowest degree starts at the head of the list.
+
+Q:  How does the multiplication happen?
+A:  Take two monomials with degree d1,d2 and value v1,v2
+  1. Add d1+d2 ::L98
+  2. Check if that degree already exists in the answer list ::L104, mono* degreeExists()
+    degreeExists != NULL:
+      Add the product of v1 and v2 to the element returned by degreeExists ::L105
+    Doesn't exist:
+      1. Create a new node with the degree d1+d2, and add it to the end
+     of the answer list ::L107
+      2. Add the product of v1 and v2 to that node.
+  3. Repeat 1 and 2 for all monomial pairs.
+
+Q:  Why substitute 'head2' for head2t in ::L96
+A:  I forgot why.
+
+#19 Breaks in a schedule
+
+Q:  How is the schedule stored?
+A:  The schedule consists of timeblocks, bounded by a start and end value.
+    These values represent the minutes indicated by the time
+    (e.g 8:30a as 60*8 + 30 + 0, 6p as 6*8 + 0 + 720)
+
+Q:  How did you implement the 8AM-8PM limit?
+A:  MINTIME is 8AM and MAXTIME is 8PM
+
+Q:  How does the program find breaks in a schedule?
+A:  Consider this schedule.
+ 8AM-8PM timeblock
+ [=========================]
+ sched
+ [====]  [===]  [====] [===]
+ Input order:
+ 4       2      1      3
+ Breakstart:
+ [
+   As defined in ::L123, the program first decides to see if the soonest break
+   could start at 8AM MINTIME. This ensures that the first break is always the
+   soonest, and that the break list is automatically sorted.
+
+   The program then begins looking at the nodes to see if breakstart is located
+   inside a node. ::L127-128
+   Take node 1. Is breakstart located between Node 1's start and end?
+   Then we move to the next. We discover that it is also not inside node 2.
+   Same case with node 3.
+
+   At node 4, it seems that breakstart is >= 4's start, and also <= to 4's end.
+   Thus, breakstart is inside node 4 and a break cannot be located inside it!
+
+   We then move breakstart to the END of node 4.
+
+   8AM-8PM timeblock
+   [=========================]
+   sched
+   [====]  [===]  [====] [===]
+   Input order:
+   4       2      1      3
+   Breakstart:
+        [
+
+   A timeblock is defined a start and end. Fortunately, our break end has been
+   initialized already as MAXTIME in ::L124
+
+   Unfortunately, it would look like this.
+
+   8AM-8PM timeblock
+   [=========================]
+   sched
+   [====]  [===]  [====] [===]
+   Input order:
+   4       2      1      3
+   Break:
+        [====================]
+
+   Nodes 1,2,3 are the break. We know that, but how does the program know?
+
+   A good solution would be to go through every node and see if it is inside
+   the break. Similar to how we determined if a break is inside a schedule node,
+   a schedule node is inside the break if it starts between the schedule.
+
+   How do we move break out of the way? Every time the break collides with a
+   schedule(::L133),we adjust the break end to the start of the colliding schedule.
+   (::L134)
+
+   Collision with 1! (isBetweenBreak() returned address of 1)
+   8AM-8PM timeblock
+   [=========================]
+   sched
+   [====]  [===]  [====] [===]
+   Input order:
+   4       2      !1      3
+   Break:
+        [====================]
+   New break: (After ::L134)
+        [=========]
+
+   Collision with 2! (isBetweenBreak() returned address of 2)
+   8AM-8PM timeblock
+   [=========================]
+   sched
+   [====]  [===]  [====] [===]
+   Input order:
+   4       2      !1      3
+   Break:
+       [==========]
+   New break: (After ::L134)
+       [===]
+
+   No more collisions. (when isBetweenBreak() returns NULL)
+
+   Now we see a well defined break which does not collide with any schedule.
+   This is appended to both break and schedule lists.
