@@ -7,28 +7,28 @@
 //another struct for saving the unique inputs, and frequency
 //and then compare
 
-struct node{
+struct node20{
 	char str[MAX];
-	struct node *next_node;
+	struct node20 *next_node;
 };
 
-struct node1{
+struct node201{
 	char str[MAX];
 	int num;
-	struct node1 *next_node;
+	struct node201 *next_node;
 };
 
 
-struct node* create_list(struct node *head, struct node *current, char temp[]){
-	current=malloc(sizeof(struct node));
+struct node20* create_list20(struct node20 *head, struct node20 *current, char temp[]){
+	current=malloc(sizeof(struct node20));
 	strcpy(current->str, temp);
 	current->next_node=head;
 	head=current;
 	return head;
 }
 
-struct node* add_list(struct node *head, struct node *current, char temp[]){
-	current=malloc(sizeof(struct node));
+struct node20* add_list20(struct node20 *head, struct node20 *current, char temp[]){
+	current=malloc(sizeof(struct node20));
 	strcpy(current->str, temp);
 	current->next_node=head;
 	head=current;
@@ -37,13 +37,13 @@ struct node* add_list(struct node *head, struct node *current, char temp[]){
 
 
 //Gets the unique words
-struct node1* compare_list(struct node *head, struct node *current, struct node1 *head1, struct node1 *current1){
+struct node201* compare_list20(struct node20 *head, struct node20 *current, struct node201 *head1, struct node201 *current1){
 	char temp[MAX];
 	while(current){
 		memset(temp, 0, sizeof(temp));
 		strcpy(temp, current->str);
 		if(head1==NULL){
-			current1=malloc(sizeof(struct node1));
+			current1=malloc(sizeof(struct node201));
 			strcpy(current1->str, temp);
 			current1->next_node=head1;
 			head1=current1;
@@ -57,7 +57,7 @@ struct node1* compare_list(struct node *head, struct node *current, struct node1
 					break;
 				}
 				else if(current1->next_node==NULL){
-					current1=malloc(sizeof(struct node1));
+					current1=malloc(sizeof(struct node201));
 					strcpy(current1->str, temp);
 					current1->next_node=head1;
 					head1=current1;
@@ -72,7 +72,7 @@ struct node1* compare_list(struct node *head, struct node *current, struct node1
 }
 
 //Counts the frequency of each word
-void frequency(struct node *head, struct node *current, struct node1 *head1, struct node1 *current1){
+void frequency20(struct node20 *head, struct node20 *current, struct node201 *head1, struct node201 *current1){
 	while(current){
 		if(current1==NULL){
 			current1=head1;
@@ -90,7 +90,7 @@ void frequency(struct node *head, struct node *current, struct node1 *head1, str
 	}
 }
 
-struct node1* delete(struct node1 *c, struct node1 *head1){
+struct node201* delete20(struct node201 *c, struct node201 *head1){
 	if(c->str==head1->str){
 			c=c->next_node;
 			head1=c;
@@ -98,18 +98,18 @@ struct node1* delete(struct node1 *c, struct node1 *head1){
 		}
 		else{
 			if(c->next_node==NULL){
-				struct node1 *temp1=head1->next_node;
-				struct node1 *temp2=head1;
+				struct node201 *temp1=head1->next_node;
+				struct node201 *temp2=head1;
 				while(temp1->next_node){
 					temp1=temp1->next_node;
 					temp2=temp2->next_node;
 				}
-				temp2->next_node=(struct node1*)NULL;
+				temp2->next_node=(struct node201*)NULL;
 				free(temp1);
 				return head1;
 			}
 			else{
-				struct node1 *prev=head1;
+				struct node201 *prev=head1;
 				while(prev->next_node!=c){
 					prev=prev->next_node;
 				}
@@ -120,9 +120,9 @@ struct node1* delete(struct node1 *c, struct node1 *head1){
 		}
 }
 
-struct node1* getHighest(struct node1 *current1, struct node1 *head1){
-	struct node1 *c=current1;
-	static int i=0;
+struct node201* getHighest20(struct node201 *current1, struct node201 *head1){
+	struct node201 *c=current1;
+	static int j=0;
 	int currentHighest=current1->num;
 		while(current1->next_node){
 			
@@ -131,19 +131,19 @@ struct node1* getHighest(struct node1 *current1, struct node1 *head1){
 				currentHighest=current1->num;
 				c=current1;
 			}
-		}if(i==0){
+		}if(j==0){
 			printf("%s %d", c->str, c->num);
-			i++;
+			j++;
 		}
 		else{
 			printf(", %s %d", c->str, c->num);
 		}
-		return delete(c, head1);;
+		return delete20(c, head1);;
 }
 
 int main(){
-	struct node *head=NULL, *current;
-	struct node1 *head1=NULL, *current1;
+	struct node20 *head=NULL, *current;
+	struct node201 *head1=NULL, *current1;
 	char string[MAX], temp[MAX]="";
 	int i, num;
 	printf("Enter a series of words: ");
@@ -156,22 +156,22 @@ int main(){
 			i++;
 		}
 		if(head==NULL){
-			head=create_list(head, current, temp);
+			head=create_list20(head, current, temp);
 			memset(temp, 0, sizeof(temp));
 			continue;
 		}
 		else{
-			head=add_list(head, current, temp);
+			head=add_list20(head, current, temp);
 			memset(temp, 0, sizeof(temp));
 		}
 	}
 	current=head;
-	head1=compare_list(head, current, head1, current1);
+	head1=compare_list20(head, current, head1, current1);
 	current1=head1;
-	frequency(head, current, head1, current1);
+	frequency20(head, current, head1, current1);
 	while(head1){
 		current1=head1;
-		head1=getHighest(current1, head1);
+		head1=getHighest20(current1, head1);
 	}
 	
 }
